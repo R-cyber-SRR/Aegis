@@ -1,0 +1,28 @@
+{
+  "feature_names": [
+    "amount_log",
+    "amount_to_avg_ratio",
+    "amount_zscore",
+    "balance_to_amount_ratio",
+    "hour",
+    "day_of_week",
+    "month",
+    "time_of_day_encoded",
+    "tx_count",
+    "avg_amount",
+    "std_amount",
+    "avg_balance",
+    "customer_age",
+    "tx_type_encoded",
+    "channel_encoded",
+    "location_encoded",
+    "TransactionDuration",
+    "LoginAttempts",
+    "high_amount_flag",
+    "unusual_time_flag",
+    "multiple_login_flag"
+  ],
+  "model_type": "isolation_forest",
+  "contamination": 0.05,
+  "random_state": 42
+}

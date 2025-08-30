@@ -1,0 +1,12 @@
+features:
+  mandatory_columns: [timestamp, amount, user_id, merchant_id, tx_type]
+  optional_columns: [ip_address, device_fingerprint, latitude, longitude]
+  id_column: user_id
+  timestamp_column: timestamp
+  amount_column: amount
+  category_column: tx_type
+model:
+  algorithm: isolation_forest
+  contamination: 0.02
+  random_state: 42
+  threshold: 0.8

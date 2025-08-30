@@ -1,0 +1,13 @@
+features:
+  mandatory_columns: [TransactionDate, TransactionAmount, AccountID, MerchantID, TransactionType]
+  optional_columns: [IP Address, DeviceID, Location, Channel, CustomerAge, CustomerOccupation, TransactionDuration, LoginAttempts, AccountBalance, PreviousTransactionDate]
+  id_column: AccountID
+  timestamp_column: TransactionDate
+  amount_column: TransactionAmount
+  category_column: TransactionType
+  merchant_column: MerchantID
+model:
+  algorithm: isolation_forest
+  contamination: 0.05
+  random_state: 42
+  threshold: 0.7

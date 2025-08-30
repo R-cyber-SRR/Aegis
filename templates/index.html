@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+            background-color: #f8f9fa;
+        }
+        .upload-area.dragover {
+            border-color: #667eea;
+            background-color: #e3f2fd;
+        }
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .loading {
+            display: none;
+        }
+        .results-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-shield-alt">Aegis</i></h1>
+                    <p class="mb-0"><i>Advanced AI-powered transaction analysis and anomaly detection</i></p>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <!-- Configuration Section -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-cog"></i> Configuration</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="modelDir" class="form-label">Model Directory</label>
+                        <input type="text" class="form-control" id="modelDir" value="models/" placeholder="Path to model directory">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="threshold" class="form-label">Detection Threshold</label>
+                        <input type="range" class="form-range" id="threshold" min="0" max="1" step="0.05" value="0.7">
+                        <div class="text-center">
+                            <span id="thresholdValue">0.7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Upload Section -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-upload"></i> Data Upload</h5>
+            </div>
+            <div class="card-body">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                    <h5>Drag & Drop your CSV file here</h5>
+                    <p class="text-muted">or</p>
+                    <input type="file" id="fileInput" accept=".csv" class="d-none">
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i> Choose File
+                    </button>
+                    <p class="text-muted mt-2">Maximum file size: 16MB</p>
+                </div>
+                
+                <div id="fileInfo" class="mt-3" style="display: none;">
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle"></i> File Uploaded Successfully</h6>
+                        <div id="fileDetails"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fraud Detection Section -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-search"></i> Fraud Detection</h5>
+            </div>
+            <div class="card-body">
+                <button id="detectBtn" class="btn btn-success btn-lg" disabled>
+                    <i class="fas fa-play"></i> Run Fraud Detection
+                </button>
+                
+                <div class="loading mt-3" id="loading">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Running fraud detection analysis...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="card results-section" id="resultsSection">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Results Dashboard</h5>
+            </div>
+            <div class="card-body">
+                <!-- Metrics -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="totalTransactions">-</div>
+                            <div class="metric-label">Total Transactions</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="suspiciousTransactions">-</div>
+                            <div class="metric-label">Suspicious Transactions</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="suspiciousRate">-</div>
+                            <div class="metric-label">Suspicious Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="metric-card">
+                            <div class="metric-value" id="avgScore">-</div>
+                            <div class="metric-label">Average Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div id="resultsTable" style="display: none;">
+                    <h6>Suspicious Transactions</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="resultsTableBody">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Suspicion Score</th>
+                                    <th>Reasons</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-primary" onclick="downloadResults()">
+                            <i class="fas fa-download"></i> Download Results CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentSessionId = 'default';
+        let uploadedData = null;
+
+        // Threshold slider
+        document.getElementById('threshold').addEventListener('input', function() {
+            document.getElementById('thresholdValue').textContent = this.value;
+        });
+
+        // File input handling
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+        // Drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.csv')) {
+                alert('Please select a CSV file');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('session_id', currentSessionId);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    uploadedData = data;
+                    showFileInfo(data);
+                    document.getElementById('detectBtn').disabled = false;
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading file');
+            });
+        }
+
+        function showFileInfo(data) {
+            document.getElementById('fileInfo').style.display = 'block';
+            document.getElementById('fileDetails').innerHTML = `
+                <strong>File:</strong> ${data.message}<br>
+                <strong>Columns:</strong> ${data.columns.join(', ')}<br>
+                <strong>Preview:</strong> ${data.preview.length} rows shown
+            `;
+        }
+
+        // Fraud detection
+        document.getElementById('detectBtn').addEventListener('click', runFraudDetection);
+
+        function runFraudDetection() {
+            if (!uploadedData) {
+                alert('Please upload a file first');
+                return;
+            }
+
+            const threshold = document.getElementById('threshold').value;
+            const modelDir = document.getElementById('modelDir').value;
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('detectBtn').disabled = true;
+
+            const formData = new FormData();
+            formData.append('session_id', currentSessionId);
+            formData.append('threshold', threshold);
+            formData.append('model_dir', modelDir);
+
+            fetch('/detect', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('detectBtn').disabled = false;
+
+                if (data.success) {
+                    showResults(data);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('detectBtn').disabled = false;
+                console.error('Error:', error);
+                alert('Error running fraud detection');
+            });
+        }
+
+        function showResults(data) {
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update metrics
+            document.getElementById('totalTransactions').textContent = data.total_transactions;
+            document.getElementById('suspiciousTransactions').textContent = data.suspicious_count;
+            document.getElementById('suspiciousRate').textContent = data.suspicious_rate.toFixed(2) + '%';
+            
+            // Show results table if there are suspicious transactions
+            if (data.suspicious_count > 0) {
+                document.getElementById('resultsTable').style.display = 'block';
+                populateResultsTable();
+            } else {
+                document.getElementById('resultsTable').style.display = 'none';
+            }
+        }
+
+        function populateResultsTable() {
+            fetch(`/results?session_id=${currentSessionId}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#resultsTableBody tbody');
+                tbody.innerHTML = '';
+
+                data.flags.forEach((flag, index) => {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).textContent = index + 1;
+                    row.insertCell(1).textContent = flag.suspicion_score.toFixed(3);
+                    row.insertCell(2).textContent = flag.reasons || 'N/A';
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching results:', error);
+            });
+        }
+
+        function downloadResults() {
+            window.location.href = `/download?session_id=${currentSessionId}`;
+        }
+    </script>
+</body>
+</html>
