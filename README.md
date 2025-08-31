@@ -27,10 +27,6 @@ That's it! The script will automatically set up the environment, install depende
 
 **Option A: Automatic Installation (Recommended)**
 ```bash
-# On Windows (double-click this file):
-install_requirements.bat
-
-# On Linux/Mac:
 python install_requirements.py
 ```
 
