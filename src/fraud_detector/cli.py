@@ -10,7 +10,12 @@ from .preprocessing import preprocess
 from .profiling import create_transaction_features, select_feature_matrix
 from .model import AnomalyModel
 from .reporting import generate_reasons, write_flags_csv
-from .dashboard import run_streamlit_dashboard
+try:
+    from .dashboard import run_streamlit_dashboard
+except ImportError:
+    def run_streamlit_dashboard():
+        print("❌ Streamlit is not installed. Please run: pip install streamlit")
+        return
 
 
 def cmd_train(args: argparse.Namespace) -> None:

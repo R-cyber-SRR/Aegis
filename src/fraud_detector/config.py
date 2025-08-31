@@ -16,12 +16,19 @@ class FeatureConfig:
 	category_column: Optional[str] = None
 
 
-@dataclass
+@dataclass(frozen=True)  # Make the dataclass immutable
 class ModelConfig:
 	algorithm: str = "isolation_forest"
 	contamination: float = 0.02
 	random_state: int = 42
 	threshold: float = 0.8
+	
+	def __post_init__(self):
+		# Ensure the model configuration cannot be changed
+		if self.algorithm != "isolation_forest":
+			object.__setattr__(self, "algorithm", "isolation_forest")
+		if self.random_state != 42:
+			object.__setattr__(self, "random_state", 42)
 
 
 @dataclass

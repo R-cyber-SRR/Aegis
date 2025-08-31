@@ -16,6 +16,11 @@ from .utils import ensure_dir
 class AnomalyModel:
 	config: ModelConfig
 	model: IsolationForest | None = None
+	
+	def __post_init__(self):
+		# Ensure the model uses fixed parameters
+		if not isinstance(self.config, ModelConfig):
+			raise TypeError("Configuration must be a ModelConfig instance")
 
 	def fit(self, X: pd.DataFrame) -> None:
 		self.model = IsolationForest(

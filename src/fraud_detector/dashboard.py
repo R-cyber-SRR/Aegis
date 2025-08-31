@@ -171,8 +171,8 @@ def run_streamlit_dashboard():
                             # Use default config
                             cfg = AppConfig.from_yaml(Path("config.yaml"))
                         
-                        # Update threshold
-                        cfg.model.threshold = threshold
+                        # Use fixed threshold from configuration (cannot be changed)
+                        threshold = cfg.model.threshold
                         
                         # Load model
                         model_path = Path(model_dir)

@@ -1,6 +1,24 @@
-# 🕵️ AI-Powered Fraud Detection System
+# 🕵️ Aegis - AI-Powered Fraud Detection System
 
-This project builds an advanced anomaly detection system using historical transaction behaviour profiling to flag suspicious transactions. It now includes both a modern web-based UI and traditional CLI tools.
+**Status: ✅ Production Ready - Cleaned and Optimized**
+
+Aegis is an advanced anomaly detection system using historical transaction behavior profiling to flag suspicious transactions. The system features immutable model configuration and multiple interfaces for fraud detection.
+
+## ✨ Key Features
+- **Fixed Model Configuration**: Model parameters are locked and cannot be changed by users for security
+- **Immutable Threshold**: Detection threshold is set at 0.8 and cannot be modified at runtime
+- **Multiple Interfaces**: Web UI (Flask), Streamlit dashboard, and CLI tools
+- **Real-time Analysis**: Instant fraud detection with detailed scoring and reasoning
+
+## 🚀 Super Quick Start
+
+```bash
+# Clone and start in one command
+./start.sh
+# Then open http://localhost:5000 in your browser
+```
+
+That's it! The script will automatically set up the environment, install dependencies, create a sample model, and start the web interface.
 
 ### Quickstart
 

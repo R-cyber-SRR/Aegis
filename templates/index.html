@@ -99,10 +99,10 @@
                         <input type="text" class="form-control" id="modelDir" value="models/" placeholder="Path to model directory">
                     </div>
                     <div class="col-md-6">
-                        <label for="threshold" class="form-label">Detection Threshold</label>
-                        <input type="range" class="form-range" id="threshold" min="0" max="1" step="0.05" value="0.7">
-                        <div class="text-center">
-                            <span id="thresholdValue">0.7</span>
+                        <label for="threshold" class="form-label">Detection Threshold (Fixed)</label>
+                        <div class="alert alert-info">
+                            <i class="fas fa-lock"></i> Threshold is fixed at <strong>0.8</strong> for security reasons
+                            <br><small>This value is set in the configuration and cannot be modified</small>
                         </div>
                     </div>
                 </div>
@@ -222,10 +222,7 @@
         let currentSessionId = 'default';
         let uploadedData = null;
 
-        // Threshold slider
-        document.getElementById('threshold').addEventListener('input', function() {
-            document.getElementById('thresholdValue').textContent = this.value;
-        });
+        // Threshold is now fixed in configuration
 
         // File input handling
         document.getElementById('fileInput').addEventListener('change', handleFileSelect);
@@ -306,7 +303,7 @@
                 return;
             }
 
-            const threshold = document.getElementById('threshold').value;
+            // Threshold is fixed in configuration, no need to pass it
             const modelDir = document.getElementById('modelDir').value;
 
             document.getElementById('loading').style.display = 'block';
@@ -314,7 +311,6 @@
 
             const formData = new FormData();
             formData.append('session_id', currentSessionId);
-            formData.append('threshold', threshold);
             formData.append('model_dir', modelDir);
 
             fetch('/detect', {

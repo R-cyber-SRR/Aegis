@@ -72,7 +72,7 @@ def detect_fraud():
     """Run fraud detection"""
     try:
         session_id = request.form.get('session_id', 'default')
-        threshold = float(request.form.get('threshold', 0.7))
+        # Use fixed threshold from config - ignore user input for security
         model_dir = request.form.get('model_dir', 'models/')
         
         if session_id not in session_data:
@@ -88,7 +88,8 @@ def detect_fraud():
             return jsonify({'error': 'Configuration file not found. Please ensure config.yaml exists.'}), 400
         
         cfg = AppConfig.from_yaml(config_path)
-        cfg.model.threshold = threshold
+        # Use fixed threshold from configuration (immutable)
+        threshold = cfg.model.threshold
         
         # Load model
         model_path = Path(model_dir)
