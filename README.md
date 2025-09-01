@@ -109,5 +109,3 @@ See `config.yaml` for thresholds and feature mapping.
 - **CLI Tools**: Command-line interface for batch processing
 - **Model Management**: Training, saving, and loading of detection models
 
-### License
-MIT
