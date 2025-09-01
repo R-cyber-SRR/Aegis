@@ -164,11 +164,4 @@ If you encounter issues:
 3. Check the console output for error messages
 4. Ensure all dependencies are installed correctly
 
-## 🎉 Success!
 
-Your fraud detection system is now ready to use! The system can:
-- Detect anomalous transactions using Isolation Forest
-- Provide suspicion scores for each transaction
-- Flag transactions above a configurable threshold
-- Generate detailed reports and visualizations
-- Handle both web and command-line interfaces

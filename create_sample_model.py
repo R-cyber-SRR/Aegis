@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""
-Script to create a sample model for demonstration purposes
-"""
+
+# Script to create a sample model for demonstration purposes
+
 
 import pandas as pd
 import numpy as np

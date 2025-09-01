@@ -1,6 +1,6 @@
 #!/bin/bash
 # Aegis Fraud Detection System - Startup Script
-# This script activates the virtual environment and starts the web application
+ 
 
 echo "🕵️ Starting Aegis Fraud Detection System"
 echo "=========================================="

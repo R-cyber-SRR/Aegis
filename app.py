@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""
-Flask Web Application for Fraud Detection
-Alternative to Streamlit for users who prefer traditional web frameworks
-"""
+
+# Flask Web Application for Fraud Detection
+
 
 from flask import Flask, render_template, request, jsonify, send_file
 import pandas as pd

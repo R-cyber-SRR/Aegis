@@ -10,13 +10,13 @@ import os
 
 def run_command(command, description):
     """Run a command and handle errors"""
-    print(f"🔄 {description}...")
+    print(f" {description}...")
     try:
         result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
-        print(f"✅ {description} completed successfully")
+        print(f" {description} completed successfully")
         return True
     except subprocess.CalledProcessError as e:
-        print(f"❌ {description} failed:")
+        print(f" {description} failed:")
         print(f"   Error: {e.stderr}")
         return False
 
@@ -29,25 +29,25 @@ def check_package(package_name):
         return False
 
 def main():
-    print("🚀 Fraud Detection System - Package Installation")
+    print(" Fraud Detection System - Package Installation")
     print("=" * 50)
     
     # Check Python version
     python_version = sys.version_info
     if python_version.major < 3 or (python_version.major == 3 and python_version.minor < 8):
-        print("❌ Python 3.8+ is required. Current version:", sys.version)
+        print(" Python 3.8+ is required. Current version:", sys.version)
         return
     
-    print(f"✅ Python version: {sys.version}")
+    print(f" Python version: {sys.version}")
     
     # Upgrade pip first
-    print("\n📦 Upgrading pip...")
+    print("\n Upgrading pip...")
     run_command(f"{sys.executable} -m pip install --upgrade pip", "Upgrading pip")
     
     # Install requirements
-    print("\n📦 Installing required packages...")
+    print("\n Installing required packages...")
     if not run_command(f"{sys.executable} -m pip install -r requirements.txt", "Installing requirements"):
-        print("\n❌ Failed to install requirements. Trying individual packages...")
+        print("\n Failed to install requirements. Trying individual packages...")
         
         # Try installing packages individually
         packages = [
@@ -68,7 +68,7 @@ def main():
             run_command(f"{sys.executable} -m pip install {package}", f"Installing {package}")
     
     # Verify installations
-    print("\n🔍 Verifying package installations...")
+    print("\n Verifying package installations...")
     required_packages = [
         "pandas", "numpy", "sklearn", "flask", "plotly", 
         "streamlit", "yaml", "dotenv", "joblib", "uvicorn"

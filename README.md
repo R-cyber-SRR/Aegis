@@ -1,5 +1,4 @@
-# 🕵️ Aegis - AI-Powered Fraud Detection System
-
+# 🕵️ Aegis - AI model for flagging suspicious transactions using historical data and behavior profiling
 **Status: ✅ Production Ready - Cleaned and Optimized**
 
 Aegis is an advanced anomaly detection system using historical transaction behavior profiling to flag suspicious transactions. The system features immutable model configuration and multiple interfaces for fraud detection.
